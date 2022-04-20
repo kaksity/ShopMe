@@ -2,8 +2,8 @@ import { Application } from "express";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
-import { HelloWorldResolver } from "./graphql/resolvers/helloworld.resolvers";
 import { Server } from "http";
+import { AuthenticationResolver, HelloWorldResolver } from "./graphql/resolvers";
 
 export class ApplicationServer {
     
@@ -21,7 +21,7 @@ export class ApplicationServer {
     {
         const apolloServer = new ApolloServer({
             schema: await buildSchema({
-                resolvers: [HelloWorldResolver],
+                resolvers: [HelloWorldResolver, AuthenticationResolver],
                 // context: ({req,res}) => ({req,res})
             }), 
         });
