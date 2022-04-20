@@ -1,7 +1,9 @@
 import { compare, hash } from "bcryptjs";
 import { Arg, InputType, Mutation, Resolver } from "type-graphql";
+import { getManager } from "typeorm";
 import { AuthenticationEntity } from "../../database/entity/authentication.entity";
 import { UserEntity } from "../../database/entity/user.entity";
+import { signJWTToken } from "../../utility/functions.utility";
 import { LoginInputType, RegisterInputType } from "../inputtypes/authentication.inputtype";
 import { AuthenticationObjectType, MessageObjectType } from "../objecttypes";
 
@@ -13,12 +15,21 @@ export class AuthenticationResolver
     async login(@Arg("input", () => LoginInputType) input: LoginInputType)
     {
         // Check if the user already exists
-        const authenticationQueryResult = await AuthenticationEntity.findOne({
-            where:{
-                emailAddress: input.emailAddress
-            }
-        })
+        // const authenticationQueryResult = await AuthenticationEntity.findOne({
+        //     relations: ['user'],
+        //     where:{
+        //         emailAddress: input.emailAddress
+        //     }
+        // })
 
+        let authenticationQueryResult;
+
+        try {
+            authenticationQueryResult = await AuthenticationEntity.createQueryBuilder("authentication").innerJoinAndSelect("authentication.user","user").where("emailAddress = :emailAddress", {emailAddress: input.emailAddress}).getOne();
+        } catch (error) {
+            console.log(error)
+        }
+        
         if (!authenticationQueryResult)
         {
             throw new Error("Invalid login credentials")
@@ -31,7 +42,11 @@ export class AuthenticationResolver
             throw new Error("Invalid login credentials")
         }
 
-        return new AuthenticationObjectType('bearer', 'sdjasdjsaopjdaspojdaso', 3600);
+        console.log(authenticationQueryResult);
+
+        return new AuthenticationObjectType('bearer', signJWTToken({
+            userId:authenticationQueryResult.user.id
+        }, process.env.JWT_SECRET_KEY), 3600);
     }
 
     @Mutation(() => MessageObjectType)
@@ -55,14 +70,19 @@ export class AuthenticationResolver
         const newAuthenticationRecord = await AuthenticationEntity.create({
             emailAddress: input.emailAddress.toLowerCase(),
             password: hashedPassword
-        }).save();
+        });
 
-        await UserEntity.create({
+        const newUserRecord = await UserEntity.create({
             authentication: newAuthenticationRecord,
             firstName: input.firstName,
             middleName: input.middleName,
             lastName: input.lastName
-        }).save();
+        });
+
+        await getManager().transaction(async transactionalEntityManager => {
+            await transactionalEntityManager.save(newAuthenticationRecord);
+            await transactionalEntityManager.save(newUserRecord);
+        });
 
         return new MessageObjectType('User was registered successfully')
     }
