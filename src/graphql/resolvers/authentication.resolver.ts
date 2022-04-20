@@ -1,8 +1,8 @@
-import { hash } from "bcryptjs";
+import { compare, hash } from "bcryptjs";
 import { Arg, InputType, Mutation, Resolver } from "type-graphql";
 import { AuthenticationEntity } from "../../database/entity/authentication.entity";
 import { UserEntity } from "../../database/entity/user.entity";
-import { RegisterInputType } from "../inputtypes/authentication.inputtype";
+import { LoginInputType, RegisterInputType } from "../inputtypes/authentication.inputtype";
 import { AuthenticationObjectType, MessageObjectType } from "../objecttypes";
 
 @Resolver()
@@ -10,9 +10,28 @@ export class AuthenticationResolver
 {
 
     @Mutation(() => AuthenticationObjectType)
-    login()
+    async login(@Arg("input", () => LoginInputType) input: LoginInputType)
     {
+        // Check if the user already exists
+        const authenticationQueryResult = await AuthenticationEntity.findOne({
+            where:{
+                emailAddress: input.emailAddress
+            }
+        })
 
+        if (!authenticationQueryResult)
+        {
+            throw new Error("Invalid login credentials")
+        }
+
+        const isPasswordValid: boolean = await compare(input.password, authenticationQueryResult.password);
+        
+        if (isPasswordValid === false)
+        {
+            throw new Error("Invalid login credentials")
+        }
+
+        return new AuthenticationObjectType('bearer', 'sdjasdjsaopjdaspojdaso', 3600);
     }
 
     @Mutation(() => MessageObjectType)
