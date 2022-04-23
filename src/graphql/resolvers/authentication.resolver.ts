@@ -4,7 +4,7 @@ import { getManager } from "typeorm";
 import { AuthenticationEntity } from "../../database/entity/authentication.entity";
 import { UserEntity } from "../../database/entity/user.entity";
 import { signJWTToken } from "../../utility/functions.utility";
-import { LoginInputType, RegisterInputType } from "../inputtypes/authentication.inputtype";
+import { ForgotPasswordInputType, LoginInputType, RegisterInputType } from "../inputtypes/authentication.inputtype";
 import { AuthenticationObjectType, MessageObjectType } from "../objecttypes";
 
 @Resolver()
@@ -14,21 +14,9 @@ export class AuthenticationResolver
     @Mutation(() => AuthenticationObjectType)
     async login(@Arg("input", () => LoginInputType) input: LoginInputType)
     {
-        // Check if the user already exists
-        // const authenticationQueryResult = await AuthenticationEntity.findOne({
-        //     relations: ['user'],
-        //     where:{
-        //         emailAddress: input.emailAddress
-        //     }
-        // })
-
         let authenticationQueryResult;
 
-        try {
-            authenticationQueryResult = await AuthenticationEntity.createQueryBuilder("authentication").innerJoinAndSelect("authentication.user","user").where("emailAddress = :emailAddress", {emailAddress: input.emailAddress}).getOne();
-        } catch (error) {
-            console.log(error)
-        }
+        authenticationQueryResult = await AuthenticationEntity.createQueryBuilder("authentication").innerJoinAndSelect("authentication.user","user").where("emailAddress = :emailAddress", {emailAddress: input.emailAddress}).getOne();
         
         if (!authenticationQueryResult)
         {
@@ -88,8 +76,37 @@ export class AuthenticationResolver
     }
 
     @Mutation(() => MessageObjectType)
-    forgotPassword() 
+    async forgotPassword(@Arg("input", () => ForgotPasswordInputType) input:ForgotPasswordInputType) 
     {
+        // Check if the user already exists
+        const authenticationQueryResult = await AuthenticationEntity.findOne({
+            where:{
+                emailAddress: input.emailAddress
+            }
+        })
 
+        if (!authenticationQueryResult)
+        {
+            throw new Error("Email Address does not exist in our records")
+        }
+
+        // const newAuthenticationRecord = await AuthenticationEntity.create({
+        //     emailAddress: input.emailAddress.toLowerCase(),
+        //     password: hashedPassword
+        // });
+
+        // const newUserRecord = await UserEntity.create({
+        //     authentication: newAuthenticationRecord,
+        //     firstName: input.firstName,
+        //     middleName: input.middleName,
+        //     lastName: input.lastName
+        // });
+
+        // await getManager().transaction(async transactionalEntityManager => {
+        //     await transactionalEntityManager.save(newAuthenticationRecord);
+        //     await transactionalEntityManager.save(newUserRecord);
+        // });
+
+        return new MessageObjectType('A mail has been sent to you containing password reset link')
     }
 }

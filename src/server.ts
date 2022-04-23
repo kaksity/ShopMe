@@ -22,8 +22,8 @@ export class ApplicationServer {
         const apolloServer = new ApolloServer({
             schema: await buildSchema({
                 resolvers: [HelloWorldResolver, AuthenticationResolver],
-                // context: ({req,res}) => ({req,res})
             }), 
+            context: ({req,res}) => ({req,res})
         });
         await apolloServer.start()
         apolloServer.applyMiddleware({ app });
