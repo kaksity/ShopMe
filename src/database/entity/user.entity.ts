@@ -13,7 +13,7 @@ export class UserEntity extends GenericEntity {
     firstName: string;
 
     @Column({ nullable: true })
-    middleName: string;
+    middleName?: string;
 
     @Column()
     lastName: string;

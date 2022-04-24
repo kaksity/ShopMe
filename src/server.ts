@@ -3,7 +3,7 @@ import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { Server } from "http";
-import { AuthenticationResolver, HelloWorldResolver } from "./graphql/resolvers";
+import { AuthenticationResolver, HelloWorldResolver, UserProfileResolver } from "./graphql/resolvers";
 
 export class ApplicationServer {
     
@@ -21,7 +21,7 @@ export class ApplicationServer {
     {
         const apolloServer = new ApolloServer({
             schema: await buildSchema({
-                resolvers: [HelloWorldResolver, AuthenticationResolver],
+                resolvers: [HelloWorldResolver, AuthenticationResolver, UserProfileResolver],
             }), 
             context: ({req,res}) => ({req,res})
         });

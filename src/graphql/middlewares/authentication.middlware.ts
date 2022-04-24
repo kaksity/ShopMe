@@ -1,3 +1,28 @@
-export class AuthenticationMiddlware {
-    
+import { injectable } from "tsyringe";
+import { MiddlewareFn, MiddlewareInterface, NextFn, ResolverData } from "type-graphql";
+import { Context } from "../../interfaces";
+import { decodeJWTToken } from "../../utility/functions.utility";
+
+@injectable()
+export class AuthenticationMiddlware implements MiddlewareInterface<Context> {
+    public use: MiddlewareFn<Context> = ({ context, info }: ResolverData<Context>, next: NextFn) => {
+        try {
+            const authHeader = context.req.headers.authorization;
+            
+            if (!authHeader)
+            {
+                throw new Error("You need to log in");    
+            }
+
+            const token = authHeader.split(' ')[1];
+            
+            const decodedToken = decodeJWTToken(token,process.env.JWT_SECRET_KEY);
+            
+            context.payload = decodedToken;
+            
+            return next();            
+        } catch (error) {
+            throw new Error("You need to log in");
+        }
+    };
 }

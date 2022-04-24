@@ -1,6 +1,6 @@
-import { Field, Resolver } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 
-@Resolver()
+@ObjectType()
 export class UserProfileObjectType {
     @Field()
     id: string;
@@ -8,15 +8,15 @@ export class UserProfileObjectType {
     @Field()
     firstName: string;
 
-    @Field()
+    @Field({ nullable: true})
     middleName: string;
 
     @Field()
     lastName: string;
 
-    @Field()
+    @Field({ nullable: true})
     phoneNumber: string;
 
-    @Field()
+    @Field({ nullable: true})
     address: string;
 }

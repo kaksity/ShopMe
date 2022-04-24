@@ -3,17 +3,17 @@ import { Field, InputType } from "type-graphql";
 @InputType()
 export class UpdateUserProfileInputType {
     @Field({ nullable: true })
-    firstName: string;
+    firstName?: string;
 
     @Field({ nullable: true })
-    middleName: string;
+    middleName?: string;
 
     @Field({ nullable: true })
-    lastName: string;
+    lastName?: string;
 
     @Field({ nullable: true })
-    phoneNumber: string;
+    phoneNumber?: string;
 
     @Field({ nullable: true })
-    address: string;
+    address?: string;
 }

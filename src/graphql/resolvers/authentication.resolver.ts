@@ -1,11 +1,6 @@
-import { compare, hash } from "bcryptjs";
 import { container } from "tsyringe";
 import { Arg, InputType, Mutation, Resolver } from "type-graphql";
-import { getManager } from "typeorm";
-import { AuthenticationEntity } from "../../database/entity/authentication.entity";
-import { UserEntity } from "../../database/entity/user.entity";
 import { AuthenticationService } from "../../services/authentication.service";
-import { HelloWorldService } from "../../services/implementations/helloworld.service";
 import { signJWTToken } from "../../utility/functions.utility";
 import { ForgotPasswordInputType, LoginInputType, RegisterInputType } from "../inputtypes/authentication.inputtype";
 import { AuthenticationObjectType, MessageObjectType } from "../objecttypes";
