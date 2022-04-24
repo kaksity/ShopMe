@@ -1,6 +1,7 @@
 import { injectable } from "tsyringe";
 import { MiddlewareFn, MiddlewareInterface, NextFn, ResolverData } from "type-graphql";
-import { Context } from "../../interfaces";
+import { UserEntity } from "../../database/entity/user.entity";
+import { Context, IJwtPayload } from "../../interfaces";
 import { decodeJWTToken } from "../../utility/functions.utility";
 
 @injectable()
@@ -16,10 +17,9 @@ export class AuthenticationMiddlware implements MiddlewareInterface<Context> {
 
             const token = authHeader.split(' ')[1];
             
-            const decodedToken = decodeJWTToken(token,process.env.JWT_SECRET_KEY);
+            const decodedToken = decodeJWTToken(token,process.env.JWT_SECRET_KEY) as IJwtPayload;
             
-            context.payload = decodedToken;
-            
+            context.user = decodedToken.user;
             return next();            
         } catch (error) {
             throw new Error("You need to log in");

@@ -1,7 +1,6 @@
 import { autoInjectable, container, inject } from "tsyringe";
 import { Arg, Query, Resolver } from "type-graphql";
-import { HelloWorldService } from "../../services/implementations/helloworld.service";
-import { IHelloWorldService } from "../../services/interfaces/ihelloworld.service";
+import { HelloWorldService } from "../../services";
 
 @Resolver()
 export class HelloWorldResolver {

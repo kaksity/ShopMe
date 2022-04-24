@@ -1,4 +1,6 @@
 import { Field, ObjectType } from "type-graphql";
+import { ShopEntity } from "../../database/entity/shop.entity";
+import { ShopObjectType } from "./shop.objecttype";
 
 @ObjectType()
 export class UserProfileObjectType {
@@ -9,14 +11,17 @@ export class UserProfileObjectType {
     firstName: string;
 
     @Field({ nullable: true})
-    middleName: string;
+    middleName?: string;
 
     @Field()
     lastName: string;
 
     @Field({ nullable: true})
-    phoneNumber: string;
+    phoneNumber?: string;
 
     @Field({ nullable: true})
-    address: string;
+    address?: string;
+    
+    @Field((type) => [ShopObjectType], { nullable: true })
+    shops?: ShopObjectType[]
 }

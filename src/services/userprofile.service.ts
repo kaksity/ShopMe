@@ -7,6 +7,7 @@ export class UserProfileService
     public async getUserDetails(userId: string): Promise<UserEntity>
     {
         const results = await UserEntity.findOne({
+            relations: ['shops'],
             where:{
                 id: userId
             }
@@ -17,7 +18,7 @@ export class UserProfileService
         }
         return results;            
     }
-    public async updateUserDetails({firstName, middleName, lastName, phoneNumber, address}, userId: string): Promise<void>
+    public async updateUserDetails({firstName, middleName, lastName, phoneNumber, address}:any, userId: string): Promise<void>
     {
         const user = await UserEntity.findOne({
             where:{

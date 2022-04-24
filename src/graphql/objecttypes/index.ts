@@ -1,3 +1,4 @@
 export * from './authentication.objecttype';
 export * from './messages.objecttype';
-export * from './user.objecttype';
+export * from './shop.objecttype';
+export * from './userprofile.objecttype';

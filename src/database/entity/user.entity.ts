@@ -1,6 +1,7 @@
-import {Entity, Column, OneToOne, JoinColumn} from "typeorm";
+import {Entity, Column, OneToOne, JoinColumn, OneToMany} from "typeorm";
 import { AuthenticationEntity } from "./authentication.entity";
 import { GenericEntity } from "./generic.entity";
+import { ShopEntity } from "./shop.entity";
 
 @Entity("users")
 export class UserEntity extends GenericEntity {
@@ -19,8 +20,11 @@ export class UserEntity extends GenericEntity {
     lastName: string;
     
     @Column({ nullable: true })
-    phoneNumber: string;
+    phoneNumber?: string;
 
     @Column({ nullable: true })
-    address: string;
+    address?: string;
+
+    @OneToMany(() => ShopEntity, (shop) => shop.user)
+    shops?: ShopEntity[];
 }

@@ -13,10 +13,7 @@ export class AuthenticationResolver
     async login(@Arg("input", () => LoginInputType) input: LoginInputType)
     {
         let result = await container.resolve(AuthenticationService).login(input.emailAddress, input.password)
-
-        return new AuthenticationObjectType('bearer', signJWTToken({
-            userId: result.user.id
-        }, process.env.JWT_SECRET_KEY), 3600);
+        return new AuthenticationObjectType('bearer', signJWTToken({user: result.user}, process.env.JWT_SECRET_KEY), 3600);
     }
 
     @Mutation(() => MessageObjectType)

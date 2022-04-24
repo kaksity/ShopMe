@@ -1,31 +1,31 @@
 import { container } from "tsyringe";
 import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
 import { Context } from "../../interfaces";
-import { UserProfileService } from "../../services/userprofile.service";
-import { UpdateUserProfileInputType } from "../inputtypes/userprofile.inputtype";
-import { AuthenticationMiddlware } from "../middlewares/authentication.middlware";
-import { UserProfileObjectType } from "../objecttypes/userprofile.objecttype";
+import { UserProfileService } from "../../services";
+import { UpdateUserProfileInputType } from "../inputtypes";
+import { AuthenticationMiddlware } from "../middlewares";
+import { MessageObjectType, UserProfileObjectType } from "../objecttypes";
+
 
 @Resolver()
 export class UserProfileResolver {
 
     @Query(() => UserProfileObjectType)
     @UseMiddleware(AuthenticationMiddlware)
-    async getUserProfile(@Ctx() { payload }: Context): Promise<UserProfileObjectType>
+    async getUserProfile(@Ctx() { user }: Context): Promise<UserProfileObjectType>
     {
-        const result = await container.resolve(UserProfileService).getUserDetails(payload.userId);
-        console.log(result);
+        const result = await container.resolve(UserProfileService).getUserDetails(user.id);
         return result;
     }
 
-    @Mutation(() => String)
+    @Mutation(() => MessageObjectType)
     @UseMiddleware(AuthenticationMiddlware)
     async updateUserProfile(
-        @Ctx() { payload }: Context,
+        @Ctx() { user }: Context,
         @Arg("input", () => UpdateUserProfileInputType) input: UpdateUserProfileInputType
     )
     {
-        await container.resolve(UserProfileService).updateUserDetails(input, payload.userId);
-        return "Updated User Profile"
+        await container.resolve(UserProfileService).updateUserDetails(input, user.id);
+        return new MessageObjectType("Updated User Profile");
     }
 }
