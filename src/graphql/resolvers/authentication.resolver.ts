@@ -1,8 +1,8 @@
 import { container } from "tsyringe";
 import { Arg, InputType, Mutation, Resolver } from "type-graphql";
-import { AuthenticationService } from "../../services/authentication.service";
+import { AuthenticationService } from "../../services";
 import { signJWTToken } from "../../utility/functions.utility";
-import { ForgotPasswordInputType, LoginInputType, RegisterInputType } from "../inputtypes/authentication.inputtype";
+import { ForgotPasswordInputType, LoginInputType, RegisterInputType } from "../inputtypes";
 import { AuthenticationObjectType, MessageObjectType } from "../objecttypes";
 
 @Resolver()

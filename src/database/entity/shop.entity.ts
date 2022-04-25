@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { CategoryEntity } from "./category.entity";
 import { GenericEntity } from "./generic.entity";
 import { UserEntity } from "./user.entity";
 
@@ -8,6 +9,9 @@ export class ShopEntity extends GenericEntity
     @ManyToOne(() => UserEntity, (user) => user.shops)
     user: UserEntity;
 
+    @OneToMany(() => CategoryEntity, (categories) => categories.shop)
+    categories: CategoryEntity[];
+    
     @Column()
     name?: string;
 

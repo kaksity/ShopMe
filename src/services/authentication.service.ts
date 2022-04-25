@@ -1,8 +1,7 @@
 import { compare, hash } from "bcryptjs";
 import { injectable } from "tsyringe";
 import { getManager } from "typeorm";
-import { AuthenticationEntity } from "../database/entity/authentication.entity";
-import { UserEntity } from "../database/entity/user.entity";
+import { AuthenticationEntity, UserEntity } from "../database/entity";
 
 @injectable()
 export class AuthenticationService {

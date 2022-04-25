@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from "type-graphql";
+import { CategoryObjectType } from "./category.objecttype";
 import { UserProfileObjectType } from "./userprofile.objecttype";
 
 @ObjectType()
@@ -10,6 +11,9 @@ export class ShopObjectType
     @Field((type) => UserProfileObjectType)
     user: UserProfileObjectType;
 
+    @Field((type) => [CategoryObjectType], { nullable: true })
+    categories: CategoryObjectType[]
+    
     @Field({ nullable: true })
     name?: string;
 

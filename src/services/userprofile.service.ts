@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { UserEntity } from "../database/entity/user.entity";
+import { UserEntity } from "../database/entity";
 
 @injectable()
 export class UserProfileService

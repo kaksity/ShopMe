@@ -1,6 +1,6 @@
 import { injectable } from "tsyringe";
-import { ShopEntity } from "../database/entity/shop.entity";
-import { UserEntity } from "../database/entity/user.entity";
+import { ShopEntity, UserEntity } from "../database/entity";
+
 
 @injectable()
 export class ShopService
