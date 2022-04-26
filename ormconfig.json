@@ -6,7 +6,7 @@
    "password": "D@ud@p0n@2",
    "database": "ShopMe",
    "synchronize": true,
-   "logging": true,
+   "logging": false,
    "entities": [
       "src/database/entity/**/*.ts"
    ],
